@@ -44,18 +44,22 @@ void __global__ circ(float2 *f, float r, int N, int Nz) {
   f[id0].y *= lam;
 }
 
-void __global__ takexy(float *x, float *y, float *theta, int N, int Ntheta) {
+// Fill x, y with coordinates of the grid positions at all angles.
+void __global__ takexy(float *x, float *y, float const *theta,
+                       int N, int Ntheta) {
   int tx = blockDim.x * blockIdx.x + threadIdx.x;
   int ty = blockDim.y * blockIdx.y + threadIdx.y;
-
   if (tx >= N || ty >= Ntheta)
     return;
-  x[tx + ty * N] = (tx - N / 2) / (float)N * __cosf(theta[ty]);
-  y[tx + ty * N] = -(tx - N / 2) / (float)N * __sinf(theta[ty]);
-  if (x[tx + ty * N] >= 0.5f)
-    x[tx + ty * N] = 0.5f - 1e-5;
-  if (y[tx + ty * N] >= 0.5f)
-    y[tx + ty * N] = 0.5f - 1e-5;
+  size_t ind = tx + ty * N;
+  x[ind] =  (tx - N * 0.5f) / N * __cosf(theta[ty]);
+  y[ind] = -(tx - N * 0.5f) / N * __sinf(theta[ty]);
+  if (x[ind] >= 0.5f) {
+    x[ind] = 0.5f - 1e-5;
+  }
+  if (y[ind] >= 0.5f) {
+    y[ind] = 0.5f - 1e-5;
+  }
 }
 
 void __global__ wrap(float2 *f, int N, int Nz, int M, dir direction) {
