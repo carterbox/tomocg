@@ -1,4 +1,6 @@
+#ifndef PI
 #define PI 3.1415926535
+#endif
 
 // Divide by phi
 void __global__ divphi(float2 *g, float2 *f, float mu, int N, int Nz, dir direction) {

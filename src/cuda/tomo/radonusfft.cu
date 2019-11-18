@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "radonusfft.cuh"
 #include "kernels.cu"
 #include "shift.cu"
