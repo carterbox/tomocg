@@ -21,20 +21,12 @@ radonusfft::radonusfft(size_t ntheta, size_t pnz, size_t n, float center,
   cudaMalloc((void **)&theta, ntheta * sizeof(float));
   cudaMemcpy(theta, (float *)theta_, ntheta * sizeof(float), cudaMemcpyDefault);
 
-  int ffts[2];
-  int idist;
-  int odist;
-  int inembed[2];
-  int onembed[2];
-  // fft 2d
-  ffts[0] = 2 * n;
-  ffts[1] = 2 * n;
-  idist = 2 * n * 2 * n;
-  odist = (2 * n + 2 * m) * (2 * n + 2 * m);
-  inembed[0] = 2 * n;
-  inembed[1] = 2 * n;
-  onembed[0] = 2 * n + 2 * m;
-  onembed[1] = 2 * n + 2 * m;
+  // Plan 2D FFTs
+  int ffts[2] = {2 * n, 2 * n};
+  int idist = 2 * n * 2 * n;
+  int odist = (2 * n + 2 * m) * (2 * n + 2 * m);
+  int inembed[2] = {2 * n, 2 * n};
+  int onembed[2] = {2 * n + 2 * m, 2 * n + 2 * m};
   cufftPlanMany(&plan2dfwd, 2, ffts, inembed, 1, idist, onembed, 1, odist,
                 CUFFT_C2C, pnz);
   cufftPlanMany(&plan2dadj, 2, ffts, onembed, 1, odist, inembed, 1, idist,
