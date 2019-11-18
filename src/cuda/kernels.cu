@@ -92,7 +92,7 @@ void __global__ wrap(float2 *f, int N, int Nz, int M, dir direction) {
   }
 }
 
-void __global__ gather(float2 *g, float2 *f, float *x, float *y, int M,
+void __global__ gather(float2 *g, float2 *f, float const *x, float const *y, int M,
                        float mu, int N, int Ntheta, int Nz, dir direction) {
   int tx = blockDim.x * blockIdx.x + threadIdx.x;
   int ty = blockDim.y * blockIdx.y + threadIdx.y;
